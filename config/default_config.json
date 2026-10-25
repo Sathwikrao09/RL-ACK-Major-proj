@@ -1,0 +1,231 @@
+{
+    "simulation": {
+        "duration_s": 300,
+        "random_seed": 42,
+        "num_seeds": 10,
+        "time_step_ms": 0.1,
+        "demo_mode": false,
+        "demo_duration_s": 30
+    },
+    "network": {
+        "device_counts": [10, 20, 30],
+        "default_device_count": 10,
+        "utilization_targets": [0.5, 0.6, 0.7, 0.8, 0.9],
+        "default_utilization": 0.7,
+        "ack_path_loss_rates": [0.01, 0.05, 0.10, 0.15],
+        "default_ack_loss": 0.05,
+        "forward_path_loss_rates": [0.0, 0.01, 0.05, 0.10],
+        "default_fwd_loss": 0.01,
+        "topology": "star",
+        "wifi_standard": "802.11ax",
+        "channel_bandwidth_mhz": 20,
+        "data_rate_mbps": 143.4,
+        "guard_interval_ns": 800,
+        "propagation_model": "log_distance_indoor",
+        "path_loss_exponent": 3.0,
+        "reference_loss_db": 46.67,
+        "noise_floor_dbm": -93.97,
+        "tx_power_dbm": 20.0,
+        "area_side_m": 15.0,
+        "slot_time_us": 9,
+        "sifs_us": 16,
+        "difs_us": 34,
+        "cw_min": 15,
+        "cw_max": 1023,
+        "max_queue_size": 200,
+        "queue_service_rate_pps": 500
+    },
+    "traffic": {
+        "composition": {
+            "CC": 0.20,
+            "HBS": 0.30,
+            "BET": 0.50
+        },
+        "tiers": {
+            "CC": {
+                "name": "Critical Control",
+                "deadline_ms": 10,
+                "arrival_rate_range": [1, 5],
+                "default_arrival_rate": 3,
+                "payload_size_bytes": 64,
+                "rate_type": "per_device"
+            },
+            "HBS": {
+                "name": "High-Bandwidth Streaming",
+                "deadline_ms": 50,
+                "arrival_rate_range": [15, 30],
+                "default_arrival_rate": 20,
+                "payload_size_bytes": 1024,
+                "rate_type": "per_device"
+            },
+            "BET": {
+                "name": "Best-Effort Telemetry",
+                "deadline_ms": 500,
+                "arrival_rate_range": [0.1, 2],
+                "default_arrival_rate": 1,
+                "payload_size_bytes": 128,
+                "rate_type": "per_device"
+            }
+        }
+    },
+    "ack_actions": {
+        "a0": {
+            "name": "No ACK (QoS 0-like)",
+            "control_packets": 0,
+            "handshake_delay_ms": 0,
+            "retransmission_limit": 0,
+            "energy_cost_mj": 0.0,
+            "loss_sensitivity": "none"
+        },
+        "a1": {
+            "name": "Local/Proxy ACK",
+            "control_packets": 1,
+            "handshake_delay_ms": 0.5,
+            "retransmission_limit": 0,
+            "energy_cost_mj": 0.1,
+            "loss_sensitivity": "low"
+        },
+        "a2": {
+            "name": "PUBACK (QoS 1-like)",
+            "control_packets": 1,
+            "handshake_delay_ms": 2.0,
+            "retransmission_limit": 3,
+            "energy_cost_mj": 0.3,
+            "loss_sensitivity": "medium"
+        },
+        "a3": {
+            "name": "Local ACK + Selective Retransmission",
+            "control_packets": 2,
+            "handshake_delay_ms": 3.0,
+            "retransmission_limit": 4,
+            "energy_cost_mj": 0.5,
+            "loss_sensitivity": "high"
+        },
+        "a4": {
+            "name": "QoS 2-like Multi-step Handshake",
+            "control_packets": 4,
+            "handshake_delay_ms": 5.0,
+            "retransmission_limit": 5,
+            "energy_cost_mj": 0.8,
+            "loss_sensitivity": "very_high"
+        }
+    },
+    "dqn": {
+        "state_dim": 8,
+        "action_dim": 5,
+        "hidden_1": 64,
+        "hidden_2": 32,
+        "learning_rate": 0.001,
+        "discount_factor": 0.99,
+        "replay_buffer_size": 10000,
+        "batch_size": 64,
+        "target_update_interval": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "training_steps": 100000,
+        "checkpoint_interval": 5000
+    },
+    "reward": {
+        "w_latency": 0.40,
+        "w_overhead": 0.20,
+        "w_reliability": 0.30,
+        "w_utilization": 0.10
+    },
+    "sensors": {
+        "gas": {
+            "type": "gas_concentration",
+            "unit": "ppm",
+            "normal_range": [0, 50],
+            "alert_threshold": 200,
+            "danger_threshold": 500,
+            "sampling_interval_s": 1.0,
+            "noise_std": 2.0,
+            "calibration_factor": 1.0,
+            "drift_rate": 0.001
+        },
+        "temperature": {
+            "type": "temperature",
+            "unit": "celsius",
+            "normal_range": [18, 35],
+            "alert_threshold": 60,
+            "danger_threshold": 80,
+            "sampling_interval_s": 2.0,
+            "noise_std": 0.3,
+            "calibration_factor": 1.0
+        },
+        "humidity": {
+            "type": "humidity",
+            "unit": "percent",
+            "normal_range": [30, 70],
+            "alert_threshold": 85,
+            "danger_threshold": 95,
+            "sampling_interval_s": 5.0,
+            "noise_std": 1.0,
+            "calibration_factor": 1.0
+        },
+        "smoke": {
+            "type": "smoke",
+            "unit": "percent_obscuration_per_ft",
+            "normal_range": [0, 1],
+            "alert_threshold": 3.0,
+            "danger_threshold": 10.0,
+            "sampling_interval_s": 0.5,
+            "noise_std": 0.1,
+            "calibration_factor": 1.0
+        },
+        "pressure": {
+            "type": "pressure",
+            "unit": "hpa",
+            "normal_range": [1000, 1030],
+            "alert_threshold": 950,
+            "danger_threshold": 900,
+            "sampling_interval_s": 10.0,
+            "noise_std": 0.5,
+            "calibration_factor": 1.0
+        },
+        "water_leak": {
+            "type": "water_leak",
+            "unit": "binary",
+            "normal_range": [0, 0],
+            "alert_threshold": 1,
+            "danger_threshold": 1,
+            "sampling_interval_s": 2.0,
+            "noise_std": 0.0,
+            "calibration_factor": 1.0
+        },
+        "appliance_status": {
+            "type": "appliance_status",
+            "unit": "watts",
+            "normal_range": [0, 2000],
+            "alert_threshold": 3000,
+            "danger_threshold": 5000,
+            "sampling_interval_s": 5.0,
+            "noise_std": 10.0,
+            "calibration_factor": 1.0
+        }
+    },
+    "sensor_events": {
+        "gas_leak": {
+            "probability_per_hour": 0.1,
+            "duration_range_s": [30, 120],
+            "peak_ppm": 800,
+            "ramp_up_s": 10
+        },
+        "temperature_spike": {
+            "probability_per_hour": 0.2,
+            "duration_range_s": [60, 300],
+            "peak_celsius": 90,
+            "ramp_rate_c_per_s": 0.5
+        },
+        "smoke_event": {
+            "probability_per_hour": 0.05,
+            "duration_range_s": [20, 60],
+            "peak_obscuration": 15.0
+        },
+        "sensor_failure": {
+            "probability_per_hour": 0.02,
+            "duration_range_s": [60, 600]
+        }
+    }
+}

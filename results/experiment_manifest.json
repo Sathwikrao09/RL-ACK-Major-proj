@@ -1,0 +1,32 @@
+{
+  "mode": "quick",
+  "completed_runs": 96,
+  "skipped_runs": 0,
+  "total_runs": 96,
+  "device_counts": [
+    10,
+    20
+  ],
+  "utilizations": [
+    0.6,
+    0.8
+  ],
+  "ack_loss_rates": [
+    0.05,
+    0.1
+  ],
+  "seeds": [
+    42,
+    101
+  ],
+  "duration_s": 10.0,
+  "policies": [
+    "Static QoS 0",
+    "Static Local ACK",
+    "Static QoS 1",
+    "Static Local+Selective",
+    "Static QoS 2",
+    "RL-ACK DQN"
+  ],
+  "timestamp": 1792925308.0998287
+}
